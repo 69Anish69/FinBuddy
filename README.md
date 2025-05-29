@@ -1,1 +1,1 @@
-# AI-Financial-Planner
+# FinBuddy
