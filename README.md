@@ -37,3 +37,8 @@ FinBuddy is a smart financial assistant that helps users manage their income, ex
    ```bash
    git clone https://github.com/69Anish69/FinBuddy.git
    cd FinBuddy
+
+---
+
+🟢 Sprint 1: Initial service setup for Use Case 1 (Invoice OCR & Auto-Fill)
+
