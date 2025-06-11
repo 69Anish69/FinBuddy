@@ -35,5 +35,5 @@ FinBuddy is a smart financial assistant that helps users manage their income, ex
 
 1. Clone the repo  
    ```bash
-   git clone https://github.com/your-username/FinBuddy.git
+   git clone https://github.com/69Anish69/FinBuddy.git
    cd FinBuddy
