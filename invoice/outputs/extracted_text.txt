@@ -1,0 +1,25 @@
+
+
+--- Page 1 ---
+
+INVOICE
+From: ABC Technologies Pvt Ltd
+123 Tech Street, Toronto, ON
+
+Email: billing@abctech.com | Phone: 123-456-7890
+
+Invoice Number: INV-2024-00123
+Invoice Date: 2025-06-05
+
+Due Date: 2024-06-20
+
+Billed To: Aman Khoja
+
+456 Client Lane, Waterloo, ON
+
+Description Qty Amount
+Web Development Services 1 $450.00
+GST (10%) 1 $45.00
+
+Total $495.00
+
