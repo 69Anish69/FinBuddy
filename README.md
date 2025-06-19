@@ -1,44 +1,84 @@
-# 💰 FinBuddy – AI-Powered Financial Assistant
+# FinBuddy – Smart Invoice OCR & Auto‑Fill
 
-FinBuddy is a smart financial assistant that helps users manage their income, expenses, and financial goals. It combines OCR, machine learning, and chatbot technology to automate financial planning, track budgets, and support debt-free living through intelligent advice.
+FinBuddy is an AI-powered solution that extracts key information from invoices using a fine-tuned LayoutLM model and automatically fills forms via a clean web interface.
+
+---
+
+## 📁 Project Overview
+
+This repository includes:
+
+- `invoice_ocr/` – Python backend using LayoutLM for extracting fields from invoices.
+- `Webpage/` – Frontend built with HTML, Bootstrap, and JavaScript to upload invoices and display extracted results.
+- Flask server (in `Webpage/app.py`) connects both modules to provide seamless UI-to-Model integration.
 
 ---
 
 ## 🚀 Features
 
-- 📄 **Invoice OCR Extraction**  
-  Upload PDF invoices and extract key fields like amount, due date, and vendor name using OCR and NLP.
-
-- 🤖 **AI Chatbot Assistant**  
-  Ask natural language questions like “Can I afford a new phone?” or “What’s my biggest expense this month?”
-
-- 📈 **Savings & Goal Prediction**  
-  Get ML-based predictions on monthly savings and check if your goals are achievable within a timeline.
-
-- 📊 **Interactive Dashboard (UI)**  
-  A user-friendly interface built with Streamlit/Gradio for uploading files, entering data, and viewing reports.
+- ✅ Drag-and-drop invoice upload via web UI
+- ✅ Extracts key fields: Vendor, Date, Amount
+- ✅ Uses OCR (Tesseract) + LayoutLM for NER
+- ✅ Real-time results displayed in browser
+- ✅ Optional Payment flow simulation
 
 ---
 
-## 🧠 Tech Stack
+## 🖥️ Demo Walkthrough
 
-- **Frontend/UI:** Streamlit / Gradio  
-- **OCR:** Tesseract, PyMuPDF  
-- **NLP:** spaCy / Regex  
-- **ML Models:** scikit-learn (Regression, Classification)  
-- **Backend/API:** FastAPI / Flask (optional)  
-- **Database:** SQLite / JSON storage (for prototyping)
+1. Open the app:  
+  cd Webpage
+  python app.py
+
+Visit `http://127.0.0.1:5000` in your browser.
+
+2. Upload an invoice PDF or image.
+
+3. Extracted fields are displayed automatically:
+- Vendor Name
+- Invoice Date
+- Total Amount
+
+4. Click “Proceed to Payment” (mock flow).
 
 ---
 
-## 🧪 How to Run
+## 📦 Installation
 
-1. Clone the repo  
-   ```bash
-   git clone https://github.com/69Anish69/FinBuddy.git
-   cd FinBuddy
+### 1. Clone the repo
 
----
+git clone https://github.com/69Anish69/FinBuddy.git
+cd FinBuddy/Webpage
 
-🟢 Sprint 1: Initial service setup for Use Case 1 (Invoice OCR & Auto-Fill)
+### 2. Install dependencies
+bash
+Copy
+Edit
+pip install -r requirements.txt
 
+FinBuddy/
+│
+├── invoice_ocr/         # LayoutLM model and inference logic
+│   └── invoice_inference.py
+│
+├── Webpage/             # Frontend + Flask backend
+│   ├── app.py
+│   ├── index.html
+│   ├── payment.html
+│   ├── static/
+│   └── templates/
+│       └── payment.html
+│
+├── README.md
+└── requirements.txt     # All dependencies
+
+
+## Model Details
+Model: LayoutLM Base
+
+Fine-tuned on: Custom invoice NER dataset
+
+Extracted Entities:
+B-COMPANY
+B-DATE
+B-TOTAL
