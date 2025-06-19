@@ -1,25 +1,25 @@
-# FinBuddy Web Interface – Invoice OCR & Auto-Fill
+# FinBuddy – Webpage Frontend & Backend (Flask)
 
-This folder contains the web-based frontend and Flask backend for the **Invoice OCR & Auto-Fill** module of the FinBuddy project.
+This folder contains the web interface for the FinBuddy project, including the Flask backend and the HTML/CSS/JS frontend.
 
-## 🌐 Overview
+## Features
 
-The web application allows users to:
+- Upload invoice PDF or image
+- Auto-extract fields using trained LayoutLM model
+- Populate extracted values into a web form
+- Redirect to payment page after extraction
 
-- Upload invoice PDFs or images
-- Automatically extract fields (Vendor, Date, Amount)
-- View extracted data in a clean, user-friendly interface
-- Navigate to a mock payment page with auto-filled data
+## Structure
 
-## 📁 Folder Structure
+- `app.py`: Flask backend server
+- `index.html`: Main UI for invoice upload
+- `payment.html`: Dummy payment form
+- `static/`: Contains CSS, JavaScript, and image assets
+- `templates/`: Flask HTML templates (if used with `render_template`)
+
+## How to Run
 
 ```bash
-Webpage/
-├── app.py                   # Flask backend server
-├── invoice_inference.py     # Field extraction logic (imports model)
-├── templates/
-│   ├── index.html           # Main UI (upload & form)
-│   └── payment.html         # Payment page (uses auto-filled values)
-├── static/
-│   ├── style.css            # Custom styles
-│   └── img2.png             # UI image asset
+cd Webpage
+pip install -r requirements.txt  # make sure dependencies are installed
+python app.py
