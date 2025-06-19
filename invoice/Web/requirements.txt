@@ -1,0 +1,6 @@
+flask
+transformers
+torch
+pytesseract
+pdf2image
+Pillow
