@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>FinBuddy – Invoice OCR & Auto‑Fill</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AOS Library CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <header>
+    <div class="logo">FinBuddy</div>
+    <nav>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+<section id="home" class="hero-section d-flex align-items-center">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      
+      <!-- Left: Text & Button -->
+      <div class="col-md-6 text-md-start text-center" data-aos="fade-left" data-aos-duration="900">
+        <h1 class="display-4 fw-bold mb-3">
+          <span style="color: #4967cc;">Smart</span><br class="d-none d-md-block">Invoice Automation
+        </h1>
+        <p class="lead text-muted mb-4">
+          No templates. No training. Just drag and drop your invoice and let FinBuddy handle the rest.
+        </p>
+        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+          Upload Invoice
+        </a>
+      </div>
+
+      <!-- Right: Illustration -->
+      <div class="col-md-6 text-center" data-aos="zoom-in" data-aos-duration="900">
+        <img src="static/img2.png" alt="Invoice illustration" class="img-fluid" style="max-width: 100%; height: auto;">
+      </div>
+
+    </div>
+  </div>
+</section>
+<pre id="debug-json"></pre>
+
+
+<section class="why-us section-padding text-center bg-light">
+  <div class="container">
+    <h2 class="fw-bold mb-2">Why <span class="text-highlight">Choose</span> FinBuddy?</h2>
+    <p class="text-muted mb-5">We help businesses save time and reduce errors through intelligent invoice automation powered by AI.</p>
+
+    <div class="row g-4">
+      <!-- Card 1 -->
+      <div class="col-md-4">
+        <div class="why-card p-4 shadow-sm rounded">
+          <div class="why-icon bg-pink">
+            <i class="bi bi-file-earmark-text"></i>
+          </div>
+          <h5 class="fw-semibold mt-3">Smart OCR</h5>
+          <p class="small text-muted">Extract key invoice fields instantly with AI and NLP.</p>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="col-md-4">
+        <div class="why-card p-4 shadow-sm rounded">
+          <div class="why-icon bg-blue">
+            <i class="bi bi-lightning-fill"></i>
+          </div>
+          <h5 class="fw-semibold mt-3">Instant Auto-Fill</h5>
+          <p class="small text-muted">Push extracted data into forms and apps — instantly.</p>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="col-md-4">
+        <div class="why-card p-4 shadow-sm rounded">
+          <div class="why-icon bg-green">
+            <i class="bi bi-shield-lock-fill"></i>
+          </div>
+          <h5 class="fw-semibold mt-3">Secure by Design</h5>
+          <p class="small text-muted">Built with encrypted infrastructure and compliance first.</p>
+        </div>
+      </div>
+      <!-- Add 3 more below if needed -->
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+    <footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <h2>FinBuddy</h2>
+      <p>AI-powered invoice management built for businesses of the future.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Upload</a></li>
+        <li><a href="#">Extraction</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Partners</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">Docs</a></li>
+        <li><a href="#">Support</a></li>
+        <li><a href="#">Pricing</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Social</h4>
+      <ul>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">GitHub</a></li>
+        <li><a href="#">Twitter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <p>&copy; 2025 FinBuddy. All rights reserved.</p>
+  </div>
+</footer>
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="uploadModalLabel">Upload Invoice</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data" class="row g-4">
+          <!-- Left side -->
+          <div class="col-md-6 border-end">
+            <div id="dropZone" class="border border-2 border-dashed rounded p-4 text-center bg-light">
+              <p class="text-muted mb-2">Drag & drop your invoice PDF here</p>
+              <input type="file" name="file" id="invoiceInput" hidden />
+              <label for="invoiceInput" class="btn btn-outline-primary">Choose File</label>
+              <p id="fileNameDisplay" class="mt-3 small text-success"></p>
+              <div class="progress mt-3 d-none" id="uploadProgress">
+                <div class="progress-bar" role="progressbar" style="width: 0%;" id="progressBar">0%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right side -->
+          <div class="col-md-6">
+            <label class="form-label">Vendor Name</label>
+            <input type="text" id="vendor" class="form-control mb-3" id="vendor" placeholder="Auto-filled Vendor" disabled>
+
+            <label class="form-label">Invoice Date</label>
+            <input type="text" id="date" class="form-control mb-3" id="date" placeholder="2024-05-12" disabled>
+
+            <label class="form-label">Amount</label>
+            <input type="text" id="amount" class="form-control mb-3" id="amount" placeholder="$1,250.00" disabled>
+            <button type="button" id="proceedPayment" class="btn btn-primary w-100 mt-2">
+              Proceed to Payment
+            </button>
+
+
+            <!-- <button type="submit" class="btn btn-primary w-100 mt-2">Submit</button> -->
+            
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AOS Library JS -->
+<!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    AOS.init();
+
+    /* ========= Elements ========= */
+    const input      = document.getElementById('invoiceInput');
+    const fileLabel  = document.getElementById('fileNameDisplay');
+    const dropZone   = document.getElementById('dropZone');
+    const progressEl = document.getElementById('uploadProgress');
+    const bar        = document.getElementById('progressBar');
+    const vendor     = document.getElementById('vendor');
+    const dateField  = document.getElementById('date');
+    const amount     = document.getElementById('amount');
+    const debugJson  = document.getElementById('debug-json');
+
+    /* ========= Drag-drop styles ========= */
+    ['dragover','dragenter'].forEach(evt => {
+      dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.add('border-primary'); });
+    });
+    ['dragleave','drop'].forEach(evt => {
+      dropZone.addEventListener(evt, () => dropZone.classList.remove('border-primary'));
+    });
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      input.files = e.dataTransfer.files;
+      handleFile();
+    });
+
+    /* ========= File chooser click ========= */
+    input.addEventListener('change', handleFile);
+
+    /* ========= Core upload handler ========= */
+    async function handleFile () {
+      const file = input.files[0];
+      if (!file) return;
+
+      /* Reset UI */
+      vendor.value = dateField.value = amount.value = '';
+      debugJson.textContent = '';
+
+      /* Show fake progress */
+      fileLabel.textContent = 'Uploading ' + file.name + ' …';
+      progressEl.classList.remove('d-none');
+      let pct = 0;
+      bar.style.width = '0%'; bar.textContent = '0%';
+      const fakeTimer = setInterval(() => {
+        pct += 10; bar.style.width = pct + '%'; bar.textContent = pct + '%';
+        if (pct >= 90) clearInterval(fakeTimer);
+      }, 120);
+
+      /* Upload to backend */
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const resp   = await fetch('/upload', { method: 'POST', body: formData });
+        const result = await resp.json();
+
+        clearInterval(fakeTimer);
+        bar.style.width = '100%'; bar.textContent = '100%';
+        fileLabel.textContent = 'Extracted: ' + file.name;
+
+        /* Populate UI fields using vendor/date/amount keys */
+        vendor.value  = result.vendor  || 'Not found';
+        dateField.value = result.date   || 'Not found';
+        amount.value = result.amount || 'Not found';
+
+        /* Debug raw JSON */
+        if (result.raw) debugJson.textContent = JSON.stringify(result.raw, null, 2);
+
+      } catch (err) {
+        clearInterval(fakeTimer);
+        progressEl.classList.add('d-none');
+        fileLabel.textContent = 'Upload failed. Try again.';
+        console.error(err);
+      }
+    }
+    document.getElementById('proceedPayment').addEventListener('click', () => {
+    const vendorVal = document.getElementById('vendor').value || '';
+    const amountVal = document.getElementById('amount').value || '';
+
+    const query = new URLSearchParams({
+      vendor: vendorVal,
+      amount: amountVal
+    }).toString();
+
+    window.location.href = "/payment?" + query;
+  });
+
+    /* ========= Optional form submit ========= */
+    // document.getElementById('uploadForm').addEventListener('submit', e => {
+    //   e.preventDefault();
+    //   alert('Invoice submitted successfully!');
+    //   bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
+    // });
+
+    // document.getElementById('uploadForm').addEventListener('submit', e => {
+    //   e.preventDefault();
+
+    //   // Redirect to payment page after success
+    //   window.location.href = "payment.html";
+    // });
+
+  </script>
+</body>
+</html>
