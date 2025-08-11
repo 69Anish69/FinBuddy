@@ -1,0 +1,23 @@
+[[rules]]
+id = "db-password"
+description = "Database Password"
+regex = '''DB_PASSWORD[=]["'\s]*[a-zA-Z0-9-_]+'''
+tags = ["dbpassword"]
+
+[[rules]]
+id = "db-username"
+description = "Database Username"
+regex = '''DB_USERNAME[=]["'\s]*[a-zA-Z0-9-_]+'''
+tags = ["dbuser"]
+
+[[rules]]
+id = "hyperparam-c"
+description = "Hyperparameter C"
+regex = '''HYPERPARAM_C[=]["'\s]*[0-9.]+'''
+tags = ["hyperparam"]
+
+[[rules]]
+id = "api-key"
+description = "API Key"
+regex = '''API_KEY[=]["'\s]*[a-zA-Z0-9-_]+'''
+tags = ["apikey"]

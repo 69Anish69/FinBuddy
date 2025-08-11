@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Rbc Visa Payment",
+    "type": "credit_card",
+    "balance": 50000.0,
+    "rate": 3,
+    "payment": 250.0,
+    "termMonths": 24,
+    "source": "bank_ledger",
+    "apr": null
+  }
+]

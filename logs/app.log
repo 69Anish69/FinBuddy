@@ -1,0 +1,11 @@
+2025-07-30 21:06:57,012 - INFO - \u2705 Application started
+2025-07-30 21:06:57,013 - INFO - Database Host: None
+2025-07-30 21:06:57,013 - INFO - Database Port: None
+2025-07-30 21:06:57,013 - INFO - EDA Features: ['']
+2025-07-30 21:06:57,013 - INFO - Hyperparameter C: 1.0
+2025-07-30 21:06:57,013 - INFO - Test Size: 0.25, Random State: 42
+2025-07-30 21:06:57,013 - INFO - Expected Accuracy: 0.8
+2025-07-30 21:06:57,013 - INFO - Number of Epochs: 10
+2025-07-30 21:06:57,013 - INFO - Experiment: default_experiment, Version: v0.1
+2025-07-30 21:06:57,013 - INFO - \U0001f504 Application logic starts here...
+2025-07-30 21:06:57,014 - INFO - \u2705 App is running successfully.
