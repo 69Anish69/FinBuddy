@@ -5,6 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
+// === API base (same pattern as Upload.tsx) ===
+const API_BASE =
+  (import.meta as any)?.env?.VITE_API_URL ||
+  ((typeof process !== 'undefined' && (process as any).env?.NEXT_PUBLIC_API_URL) || '') ||
+  ((typeof window !== 'undefined' && (window.location.port === '3000' || window.location.port === '8080'))
+    ? 'http://127.0.0.1:8000'
+    : '');
+
 const Forecast = () => {
   const [target, setTarget] = useState('Income');
   const [months, setMonths] = useState(6);
@@ -29,7 +37,7 @@ const Forecast = () => {
 
   const fetchUploadTime = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/upload/last");
+      const res = await axios.get(`${API_BASE}/upload/last`);
       if (res.data?.last_upload) {
         setLastUploadTime(res.data.last_upload);
         return true;
@@ -52,7 +60,7 @@ const Forecast = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:8000/forecast/', {
+      const res = await axios.post(`${API_BASE}/forecast/`, {
         target,
         months: Number(months),
         scenario, // <-- send scenario to backend
@@ -104,7 +112,6 @@ const Forecast = () => {
     generateForecast(); // always re-run when scenario changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scenario]);
-
 
   useEffect(() => {
     const autoRun = async () => {
@@ -166,29 +173,29 @@ const Forecast = () => {
   };
 
   const exportPDF = async () => {
-  try {
-    setExporting(true);
-    const res = await axios.post(
-      'http://localhost:8000/forecast/pdf',
-      { target, months: Number(months), scenario },
-      { responseType: 'blob' }
-    );
-    const blob = new Blob([res.data], { type: 'application/pdf' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `FinBuddy_Forecast_${scenario}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    window.URL.revokeObjectURL(url);
-  } catch (e) {
-    console.error(e);
-    setError('❌ PDF export failed. Please try again.');
-  } finally {
-    setExporting(false);
-  }
-};
+    try {
+      setExporting(true);
+      const res = await axios.post(
+        `${API_BASE}/forecast/pdf`,
+        { target, months: Number(months), scenario },
+        { responseType: 'blob' }
+      );
+      const blob = new Blob([res.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `FinBuddy_Forecast_${scenario}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error(e);
+      setError('❌ PDF export failed. Please try again.');
+    } finally {
+      setExporting(false);
+    }
+  };
 
   // === Strategy UI helpers (REPLACE) ===
   const scenarioLabel =
@@ -329,11 +336,11 @@ const Forecast = () => {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3">
-                     {impactText && (
-                      <div className={`text-xs md:text-sm ${impactIsGood ? 'text-green-700' : 'text-red-700'}`}>
-                        <span className="font-semibold text-foreground">{impactText}</span>
-                      </div>
-                    )}
+                      {impactText && (
+                        <div className={`text-xs md:text-sm ${impactIsGood ? 'text-green-700' : 'text-red-700'}`}>
+                          <span className="font-semibold text-foreground">{impactText}</span>
+                        </div>
+                      )}
                       <button
                         type="button"
                         onClick={exportPDF}
@@ -430,7 +437,10 @@ const Forecast = () => {
                         <button
                           key={opt}
                           type="button"
-                          onClick={() => setScenario(opt as any)}
+                          onClick={() => {
+                            setScenario(opt as any);
+                            try { localStorage.setItem('finbuddy_scenario', opt); } catch {}
+                          }}
                           className={`py-2 rounded border ${scenario === opt ? 'bg-primary text-white' : 'bg-white'}`}
                         >
                           {opt === 'current' ? 'Current' : opt === 'best' ? 'Best' : 'Worst'}

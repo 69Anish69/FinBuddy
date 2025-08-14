@@ -61,6 +61,43 @@ def load_dataframe():
     print("🚫 No data available in memory or disk.")
     return None, None
 
+# ---------------------------
+# Normalizer used by forecast & PDF
+# ---------------------------
+def _normalize_for_forecast(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Return a monthly dataframe with columns: Month (datetime), Income (float), Expense (float).
+    Works for raw OCR (date/credit/debit) and already-clean CSVs.
+    """
+    df = df.copy()
+    low = {c.lower(): c for c in df.columns}
+
+    # Month
+    if 'month' in low:
+        m = df[low['month']]
+    elif 'date' in low:
+        m = df[low['date']]
+    else:
+        m = df.iloc[:, 0]
+    df['Month'] = pd.to_datetime(m, errors='coerce')
+
+    # Income / Expense
+    if 'income' in low and 'expense' in low:
+        inc = pd.to_numeric(df[low['income']], errors='coerce').fillna(0.0)
+        exp = pd.to_numeric(df[low['expense']], errors='coerce').fillna(0.0)
+    else:
+        inc = pd.to_numeric(df[low['credit']], errors='coerce').fillna(0.0) if 'credit' in low else 0.0
+        exp = pd.to_numeric(df[low['debit']],  errors='coerce').fillna(0.0) if 'debit'  in low else 0.0
+
+    tmp = pd.DataFrame({'Month': df['Month'], 'Income': inc, 'Expense': exp})
+    tmp = tmp.dropna(subset=['Month']).set_index('Month')
+
+    monthly = (tmp
+               .resample('MS')
+               .agg({'Income': 'sum', 'Expense': 'sum'})
+               .reset_index())
+    return monthly
+
 
 # ---------------------------
 # Helper analytics
@@ -355,7 +392,13 @@ def run_forecast(df, target, months, scenario="current"):
     # Choose series to forecast from monthly totals
     y_col = target if target in ["Income", "Expense"] else "Income"
     y_series = monthly[y_col].astype(float)
+
+    # guard: at least two non-zero points required
+    if (y_series != 0).sum() < 2:
+        raise ValueError(f"No usable {y_col} data to forecast. Upload a richer file or pick another target.")
+
     prophet_df = monthly[["ds", y_col]].rename(columns={y_col: "y"})
+
 
     # --- Prophet on monthly totals ---
     model = Prophet()
@@ -628,23 +671,20 @@ def clear_upload():
 
 @router.get("/debug/summary")
 def debug_summary():
-    # shows what source is being used and monthly totals the model sees
-    df, src = load_dataframe()
+    df = getattr(data_store, "stored_df", None)
     if df is None or df.empty:
-        return {"source": src, "rows": 0, "monthly": {}}
-
-    # make sure Month is datetime and resample by month
-    tmp = df.copy()
-    tmp["Month"] = pd.to_datetime(tmp["Month"], errors="coerce")
-    tmp = tmp.dropna(subset=["Month"]).set_index("Month")
-
-    monthly = (tmp
-               .resample("MS")
-               .agg({"Income": "sum", "Expense": "sum"})
-               .round(2))
-
+        return {"ok": False, "msg": "No data in memory"}
+    # ensure types
+    d = df.copy()
+    d["Month"] = pd.to_datetime(d["Month"], errors="coerce")
+    d["Income"] = pd.to_numeric(d["Income"], errors="coerce").fillna(0.0)
+    d["Expense"] = pd.to_numeric(d["Expense"], errors="coerce").fillna(0.0)
+    monthly = d.groupby(pd.Grouper(key="Month", freq="M")).sum(numeric_only=True)[["Income","Expense"]]
+    monthly.index = monthly.index.strftime("%Y-%m")
     return {
-        "source": src,                         # "memory" or "disk"
-        "rows": int(len(df)),
-        "monthly": monthly.to_dict(orient="index")
+        "ok": True,
+        "rows": len(d),
+        "non_zero_income_rows": int((d["Income"] > 0).sum()),
+        "non_zero_expense_rows": int((d["Expense"] > 0).sum()),
+        "monthly": monthly.reset_index().to_dict(orient="records")
     }
