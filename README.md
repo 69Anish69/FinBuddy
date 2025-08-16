@@ -136,7 +136,7 @@ FinBuddy/
 
 ### 1) Clone
 ```bash
-git clone <YOUR_REPO_URL>.git
+git clone https://github.com/69Anish69/FinBuddy/tree/master
 cd FinBuddy
 ```
 
