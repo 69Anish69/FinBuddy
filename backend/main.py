@@ -1,48 +1,90 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, UploadFile, File
+from fastapi.responses import JSONResponse, StreamingResponse
+from datetime import datetime
+import io
+from reportlab.pdfgen import canvas
 
-from routes.upload import router as upload_router
-from routes.forecast import router as forecast_router
-from routes.goals import router as goals_router
-from routes.user import router as user_router
-from routes.loans import router as loans_router
-from routes.loan_docs import router as loan_docs_router
-from routes.report import router as report_router
+app = FastAPI(title="FinBuddy Mock API", version="1.0.0")
 
-# ✅ If assistant.py lives at backend/routes/assistant.py
-from routes.assistant import router as assistant_router
-# ❌ If you keep assistant.py next to main.py instead, use:
-# import assistant
+_LAST_UPLOAD = None
 
-app = FastAPI()
+@app.get("/health")
+def health():
+    return {"status": "ok", "time": datetime.utcnow().isoformat() + "Z"}
 
-origins = [
-    "http://localhost:3000","http://127.0.0.1:3000",
-    "http://localhost:8080","http://127.0.0.1:8080",
-]
-app.add_middleware(CORSMiddleware,
-    allow_origins=origins, allow_credentials=True,
-    allow_methods=["*"], allow_headers=["*"],
-    expose_headers=["Content-Disposition"],
-)
+@app.post("/upload")
+async def upload(file: UploadFile = File(...)):
+    global _LAST_UPLOAD
+    _LAST_UPLOAD = datetime.utcnow().isoformat() + "Z"
+    # We discard content; this is a mock
+    await file.read()
+    return {"ok": True, "filename": file.filename, "size": "mock", "stored": True}
 
-# ✅ Include each router ONCE only
-app.include_router(upload_router)
-app.include_router(forecast_router)
-# ❌ DELETE this line; it's the cause of the NameError loop
-# app.include_router(forecast.router)
+@app.get("/upload/last")
+def last_upload():
+    return {"last_upload": _LAST_UPLOAD}
 
-app.include_router(goals_router)
-app.include_router(user_router)
-app.include_router(loans_router)
-app.include_router(loan_docs_router)
-app.include_router(report_router)
+@app.post("/forecast/")
+async def forecast(payload: dict):
+    # Return the exact shape your UI expects
+    # (strategy text lines, small suggestion list, no heavy ML)
+    scenario = payload.get("scenario", "current")
+    months = int(payload.get("months", 6))
+    target = payload.get("target", "Income")
 
-# If you imported assistant_router:
-app.include_router(assistant_router)
-# If you used `import assistant` instead:
-# app.include_router(assistant.router)
+    strategy = (
+        f"Scenario: {scenario}\n"
+        f"Target: {target} for {months} months\n"
+        "1) Track top 3 expense categories weekly.\n"
+        "2) Automate a fixed transfer on payday.\n"
+        "3) Cap discretionary spend to a weekly budget."
+    )
 
-@app.get("/")
-def root():
-    return {"message": "🚀 FinBuddy API running"}
+    # 1x1 transparent PNG (base64) would be fine too, but we can just omit chart
+    # UI handles when chart is empty — or provide a tiny placeholder chart later if needed.
+    return {
+        "strategy": strategy,
+        "chart": "",  # leave empty or inject a base64 later
+        "goal_progress": [
+            {"label": "Emergency Fund", "percent": 42},
+            {"label": "Debt Paydown", "percent": 25},
+        ],
+        "anomalies": [
+            "March spending unusually high in Dining Out",
+            "Subscription spike detected in June",
+        ],
+        "suggestions": [
+            "Cancel unused subscriptions (~$20–$30/mo).",
+            "Set weekly dining cap and review on Sunday.",
+            "Sweep leftover balance to savings each payday.",
+        ],
+        "risk_level": "MEDIUM",
+        "impact_estimate_6m": 450,  # positive = savings
+    }
+
+@app.post("/forecast/pdf")
+def forecast_pdf(payload: dict):
+    # Generate a tiny 1-page PDF so “Export PDF” works
+    buf = io.BytesIO()
+    c = canvas.Canvas(buf)
+    c.setTitle("FinBuddy – Mock Forecast")
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(72, 750, "FinBuddy – Forecast (Mock)")
+    c.setFont("Helvetica", 11)
+    y = 720
+    for line in [
+        f"Scenario: {payload.get('scenario', 'current')}",
+        f"Target: {payload.get('target', 'Income')}",
+        f"Months: {payload.get('months', 6)}",
+        "Tips:",
+        " • Cancel unused subscriptions",
+        " • Weekly cap on dining",
+        " • Automate savings on payday",
+    ]:
+        c.drawString(72, y, line)
+        y -= 18
+    c.showPage()
+    c.save()
+    buf.seek(0)
+    return StreamingResponse(buf, media_type="application/pdf",
+                             headers={"Content-Disposition": 'attachment; filename="FinBuddy_Mock_Forecast.pdf"'} )

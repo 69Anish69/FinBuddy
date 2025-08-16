@@ -293,13 +293,13 @@ const Reports = () => {
                 Get a downloadable AI-powered PDF with strategy tables, charts, and action items
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button
+                {/* <button
                   onClick={handleGenerate}
                   disabled={pdfLoading}
                   className="bg-black text-white px-6 py-3 rounded-md font-semibold hover:opacity-90 transition-all disabled:opacity-60"
                 >
                   {pdfLoading ? 'Generating…' : 'Generate PDF'}
-                </button>
+                </button> */}
                 <button
                   onClick={() => window.print()}
                   className="bg-secondary text-secondary-foreground px-6 py-3 rounded-md font-semibold hover:bg-secondary/80 transition-all"
